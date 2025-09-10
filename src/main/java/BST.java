@@ -8,16 +8,24 @@ public class BST {
     private int size;
 
     public boolean isAVL() {
-        //TODO: implementar
-        return false;
+        return isAVL(this.root);
+    }
+
+    private boolean isAVL(Node node){
+        if (node == null)
+            return true;
+        
+        if (Math.abs(balance(node)) > 1)
+            return false;
+
+        return isAVL(node.left) && isAVL(node.right);
     }
 
     /**
-     * Retorna a altura da árvore.
+     * Retorna a altur da árvore.
      */
     public int height() {
-        //TODO implementar
-        return -1;
+        return height(this.root);
     }
 
     /**
@@ -25,11 +33,111 @@ public class BST {
      * para recursão e para o balance.
      */
     private int height(Node node) {
-        return -1;
+        if (node == null)
+            return -1;
+        return 1 + Math.max(height(node.left), height(node.right));
     }
 
     private int balance(Node node) {
-        return -1;
+        if (node == null)
+            return 0;
+        return height(node.left) - height(node.right);
+    }
+
+    public Node rotateRight(Node c){
+        if (c == null || c.left == null)
+            return c;
+
+        //Valores de referencia
+        Node b = c.left;
+        Node d = b.right;
+        Node p = c.parent;
+
+        //Ajuste dos filhos
+        b.right = c;
+        c.left = d;
+
+        //Ajuste parents locais
+        b.parent = p;
+        c.parent = b;
+        if (d != null)
+            d.parent = c;
+
+        //Reconectar p para apontar para b
+        if (p == null)
+            this.root = b;
+        else {
+            if (p.left == c)
+                p.left = b;
+            else
+                p.right = b;
+        }
+
+        return b;
+    }
+
+    public Node rotateLeft(Node c){
+        if (c == null || c.right == null)
+            return c;
+
+        //Valores de referência
+        Node b = c.right;
+        Node d = b.left;
+        Node p = c.parent;
+
+        //Ajuste dos filhos
+        b.left = c;
+        c.right = d;
+
+        //Ajuste parents locais
+        b.parent = p;
+        c.parent = b;
+        if (d != null)
+            d.parent = c;
+
+        //Reconectar p para apontar para b
+        if (p == null)
+            this.root = b;
+        else {
+            if (p.left == c)
+                p.left = b;
+            else
+                p.right = b;
+        }
+
+        return b;
+    }
+
+    public Node rotateLeftRight(Node c){
+        c.left = rotateLeft(c.left);
+        return rotateRight(c);
+    }
+
+    public Node rotateRightLeft(Node c){
+        c.right = rotateRight(c.right);
+        return rotateLeft(c);
+    }
+
+    private Node rebalance(Node node, int element){
+        int bf = balance(node);
+
+        //Caso LL
+        if (bf > 1 && element < node.left.value)
+            return rotateRight(node);
+
+        //Caso RR
+        if (bf < -1 && element > node.right.value)
+            return rotateLeft(node);
+
+        //Caso LR
+        if (bf > 1 && element > node.left.value)
+            return rotateLeftRight(node);
+
+        //Caso RL
+        if (bf < -1 && element < node.right.value)
+            return rotateRightLeft(node);
+
+        return node;
     }
 
     /**

@@ -1,8 +1,8 @@
 # Identificação
 
-* Nome: 
-* Email (@ccc): 
-* Matrícula: 
+* Nome: Matheus Costa Chaves
+* Email (@ccc): matheus.costa.chaves@ccc.ufcg.edu.br
+* Matrícula: 123219283
 
 # Roteiro: isAVL
 
